@@ -4,7 +4,7 @@ import axios from "axios";
 class AuthService {
   constructor() {
     this.service = axios.create({
-      baseURL: "http://localhost:5000/api",
+      baseURL: "http://localhost:4000/api",
       withCredentials: true, // indicates whether or not cross-site Access-Control requests should be made using credentials
     });
   }
@@ -20,7 +20,7 @@ class AuthService {
   login = (username, password) => {
     return this.service
       .post("/login", { username, password })
-      .then((response) => response.data);
+      .then((response) => localStorage.setItem('user', JSON.stringify(response.data))) // setting a 'user' property in localStorage
   };
 
   // Method to use to see if user is authenticated
@@ -30,7 +30,7 @@ class AuthService {
 
   // Method to use for logging our user out
   logout = () => {
-    return this.service.post("/logout", {}).then((response) => response.data);
+    return this.service.post("/logout", {}).then((response) => localStorage.removeItem('user'));// removing 'user' property from localStorage
   };
 }
 

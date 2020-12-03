@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:4001"],
     credentials: true,
   })
 );
@@ -69,9 +69,9 @@ app.locals.title = "Express - Generated with IronGenerator";
 
 // Routes Middleware
 app.use("/api", require("./routes/index"));
+app.use("/api", require("./routes/auth.routes"));
 app.use("/api", require("./routes/project.routes"));
 app.use("/api", require("./routes/task.routes"));
-app.use("/api", require("./routes/auth.routes"));
-app.use("/api", require("./routes/fileUpload.routes"));
+// app.use("/api", require("./routes/fileUpload.routes"));
 
 module.exports = app;

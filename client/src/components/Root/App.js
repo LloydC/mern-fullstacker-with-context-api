@@ -11,9 +11,11 @@ import ProjectList from "../Projects/ProjectList";
 import ProjectDetails from "../Projects/ProjectDetails";
 
 import AuthService from "../../services/auth-service";
+import AuthContext from "../../context/auth-context";// Importing my authentication context
 
 function App() {
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const initialValue = JSON.parse(localStorage.getItem("user")) || null // checking if user information is already inside local storage
+  const [loggedInUser, setLoggedInUser] = useState(initialValue); // setting loggedIn either as extracted user info or null
 
   const service = new AuthService();
 
@@ -41,22 +43,25 @@ function App() {
 
   return loggedInUser ? (
     <section className="App">
-      <Navbar userInSession={loggedInUser} getUser={getLoggedInUser} />
-      <Switch>
-        <ProtectedRoute
-          user={loggedInUser}
-          path="/projects/:id"
-          component={ProjectDetails}
-        />
-        <ProtectedRoute
-          user={loggedInUser}
-          path="/projects"
-          component={ProjectList}
-        />
-      </Switch>
+      <AuthContext.Provider value={{loggedInUser, setLoggedInUser}}>
+        <Navbar />
+        <Switch>
+          <ProtectedRoute
+            user={loggedInUser}
+            path="/projects/:id"
+            component={ProjectDetails}
+          />
+          <ProtectedRoute
+            user={loggedInUser}
+            path="/projects"
+            component={ProjectList}
+          />
+        </Switch>
+      </AuthContext.Provider>
     </section>
   ) : (
     <section className="App">
+      <AuthContext.Provider value={loggedInUser}>
       <Navbar userInSession={loggedInUser} getUser={getLoggedInUser} />
 
       <Switch>
@@ -81,6 +86,7 @@ function App() {
           component={ProjectList}
         />
       </Switch>
+      </AuthContext.Provider>
     </section>
   );
 }

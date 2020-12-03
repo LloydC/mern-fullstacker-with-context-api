@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 import AuthService from "../../services/auth-service";
+import AuthContext from "../../context/auth-context";
 
 const Navbar = (props) => {
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const {loggedInUser, setLoggedInUser } = useContext(AuthContext);
 
   const service = new AuthService();
 
-  // Mimic lifecycle method when a component updates
-  useEffect(() => {
-    setLoggedInUser(props.userInSession);
-  }, [props.userInSession]);
 
   // function to log user out
   const logoutUser = () => {
@@ -20,8 +17,6 @@ const Navbar = (props) => {
       // reset state value
       setLoggedInUser(null);
 
-      // reset getUser value
-      props.getUser(null);
     });
   };
 
